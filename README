@@ -1,0 +1,40 @@
+ .:: mkrootfs ::.
+
+ Create a root file-system ready to boot from multiple media.
+
+ USAGE SAMPLES
+ -------------
+
+ * INCLUDES-BASED COPY OF FRAMEWORK TO A DIRECTORY
+ ./mkrootfs.sh -i trusty/setup.sh -i trusty/live.sh selfcopy loader
+
+ * GENERATE BOOTSTRAP SCRIPT
+ ./mkbstrap.xsh /space/bootsrv/httpd/mkrootfs/bootstrap/loader.xsh loader /tmp
+
+ * DYNAMIC INSTALL OF UBUNTU 14.04 LTS SERVER (TRUSTY) TO 1ST HARD DISK
+ ./mkrootfs.sh -i trusty/setup.sh -i config/sample.conf mkrfs_trusty_server
+
+ * RUN INTERACTIVE BASH IN A CHROOT ENVIRONMENT OF A ROOTFS DIRECTORY
+ mount /dev/sda1 /mnt/rootfs/
+ ./mkrootfs.sh chrootme /mnt/rootfs/ /bin/bash
+ umount /dev/sda1
+
+ * CREATE A LIVE SYSTEM
+ ./mkrootfs.sh -i trusty/setup.sh -i trusty/live.sh make_live /tmp/live.d/
+ ./mkrootfs.sh -i trusty/setup.sh -i trusty/live.sh make_image squashfs /tmp/live.d/ /tmp/live-14.04-$( date '+%Y%m%d' )_amd64.squashfs
+ ./mkrootfs.sh -i trusty/setup.sh -i trusty/live.sh make_initrd /tmp/live.d/boot/initrd.img-3.13.0-43-generic /tmp/initrd.img-3.13.0-43-generic_amd64
+
+   or (in one line)
+
+ d='/tmp/live.d' k='3.13.0-43-generic'\
+ ./mkrootfs.sh -i trusty/setup.sh -i trusty/live.sh make_live "$d"\
+ make_image squashfs "$d" "/tmp/live-14.04-$( date '+%Y%m%d' )_amd64.squashfs"\
+ make_initrd "$d/boot/initrd.img-$k" "/tmp/initrd.img-$k_amd64";\
+ cp "/tmp/live.d/boot/vmlinuz-$k" "/tmp/vmlinuz-$k_amd64"
+
+ * CREATE A SNAPSHOT OF AN INSTALLATION
+ qemu-img convert -f raw /dev/sda -O qcow2 /tmp/host-sda-20140901.qcow2
+
+ * RESTORE A SNAPSHOT OF AN INSTALLATION
+ qemu-img convert /tmp/host-sda-20140901.qcow2 -O raw /dev/sda
+

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+usage () {
+  echo "Write NULL bytes on whole disk or MBR." >&2
+  echo "usage: $0 disk|mbr|mbcode|ptable <disk-name>" >&2
+  [ -n "$1" ] && echo "$1" >&2
+  exit 1
+}
+disk_size () {
+  # /sys/block/$dev/size is in sectors
+  echo $( cat /sys/block/$1/size ) && return 0
+}
+# whole disk
+zero_disk () {
+  dd if=/dev/zero of=/dev/$1 bs=512 count=$( disk_size $1 ) 2>/dev/null
+  return $?
+}
+# first sector of 512 bytes
+zero_mbr () {
+  dd if=/dev/zero of=/dev/$1 bs=512 count=1 2>/dev/null
+  return $?
+}
+# master boot code: offset 0 length 440
+zero_mbcode () {
+  dd if=/dev/zero of=/dev/$1 bs=1 count=440 2>/dev/null
+  return $?
+}
+# partition table: offset 446 length 64
+zero_ptable () {
+  dd if=/dev/zero of=/dev/$1 bs=1 skip=446 count=64 2>/dev/null
+  return $?
+}
+
+[ -b "/dev/$2" ] || usage "/dev/$2 is not a block device."
+case "$1" in
+  disk|mbr|mbcode|ptable) zero_$1 $2 ;;
+  *) usage
+esac
+exit $?

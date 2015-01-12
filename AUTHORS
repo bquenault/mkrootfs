@@ -1,0 +1,8 @@
+
+  mkrootfs was originally create in 2008 by Bertrand Quenault (Paris, FR) under
+ a more primitive form that only generated live system based on Ubuntu 8.04 LTS
+
+  This initial version was designed to provide the triplet of parts necessary
+ to boot Linux (kernel, initrd and filesystem image) and PXELINUX configuration
+ file associated.
+

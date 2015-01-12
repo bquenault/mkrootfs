@@ -1,0 +1,26 @@
+
+--- mkrootfs:
+FIX: if a function return FAILURE, process of function list MUST STOP
+
+--- linux/utils:
+FIX: GRUB can't install itself on a loop device
+
+--- trusty/setup:
+
+--- trusty/live:
+
+--- ubicast/mediaserver:
+
+FIX: umount of NFS /home occurs before killing of chrooted process, so FAILED!
+FIX: /etc/hostname, /etc/hosts and /etc/resolvconf/resolv.conf.d/base
+
+--- ubicast/skyreach:
+
+PREREQUISIT: on Panel https://panel.ubicast.eu/
+ - create user account 'synchro-easycast-fXY'
+   api_key => CM_MASTER_APIKEY
+ - create synchronization entry <customer> https://campusmanager.domain.dom/
+   api_key => CM_SYNC_APIKEY
+
+ADD easycast system "Updates" provisioning
+
